@@ -6,13 +6,9 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# ============================================================
-# 설정값 - 여기만 수정하면 됨
-# ============================================================
-TELEGRAM_TOKEN = "여기에_봇_토큰_입력"
-CHAT_ID        = "여기에_채팅ID_입력"
-WEBHOOK_SECRET = "supersignal2024"  # 트레이딩뷰 Alert URL에 붙는 비밀키
-# ============================================================
+TELEGRAM_TOKEN = "8639183060:AAEfv_lKWndTyh4afHxV5gG6PYQm3m8cmE0"
+CHAT_ID        = "-1003957162098"
+WEBHOOK_SECRET = "supersignal2024"
 
 TELEGRAM_API = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
 
@@ -32,7 +28,6 @@ def build_message(signal: str, symbol: str, price: str, timeframe: str) -> str:
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     templates = {
-        # 매수 신호
         "BUY": (
             "🚀 <b>매수 신호 발생!</b>\n"
             "━━━━━━━━━━━━━━━━━\n"
@@ -44,8 +39,6 @@ def build_message(signal: str, symbol: str, price: str, timeframe: str) -> str:
             "✅ 슈퍼트렌드 돌파 확인\n"
             "⚠️ 손절·익절 라인 반드시 확인 후 진입!"
         ),
-
-        # 매도 신호
         "SELL": (
             "🐻 <b>매도 신호 발생!</b>\n"
             "━━━━━━━━━━━━━━━━━\n"
@@ -57,8 +50,6 @@ def build_message(signal: str, symbol: str, price: str, timeframe: str) -> str:
             "🔴 슈퍼트렌드 하향 돌파 확인\n"
             "⚠️ 숏 포지션 또는 매도 검토!"
         ),
-
-        # 상승 추세 전환
         "상승추세 시작": (
             "📈 <b>상승 추세 전환!</b>\n"
             "━━━━━━━━━━━━━━━━━\n"
@@ -70,8 +61,6 @@ def build_message(signal: str, symbol: str, price: str, timeframe: str) -> str:
             "🟢 슈퍼트렌드 상승 전환 감지\n"
             "💡 매수 시점 주시 권장"
         ),
-
-        # 하락 추세 전환
         "하락추세 시작": (
             "📉 <b>하락 추세 전환!</b>\n"
             "━━━━━━━━━━━━━━━━━\n"
@@ -88,7 +77,7 @@ def build_message(signal: str, symbol: str, price: str, timeframe: str) -> str:
     return templates.get(signal, f"[신호] {signal}\n종목: {symbol}\n가격: {price}\n시각: {now}")
 
 
-@app.route(f"/webhook/{WEBHOOK_SECRET}", methods=["POST"])
+@app.route(f"/webhook/supersignal2024", methods=["POST"])
 def webhook():
     try:
         data = request.get_json(force=True) or {}
