@@ -20,27 +20,13 @@ def send_telegram(message: str):
         print(f"[❌ 전송 실패] {e}")
 
 def build_message(data: dict) -> str:
-    signal = data.get("signal", "알 수 없음")
-    ticker = data.get("ticker", "")
-    price  = data.get("price", "")
-    tf     = data.get("interval", "")
-    time_  = data.get("time", datetime.now().strftime("%Y-%m-%d %H:%M"))
+    signal = data.get("signal", "")
     if "상승" in signal:
-        icon = "🚀"; color_tag = "📗"
+        return "📗 지금은 상승추세 입니다."
     elif "하락" in signal:
-        icon = "🐻"; color_tag = "📕"
+        return "📕 지금은 하락추세 입니다."
     else:
-        icon = "🔔"; color_tag = "📘"
-    return (
-        f"{icon} <b>Supertrend 신호</b> {icon}\n"
-        f"━━━━━━━━━━━━━━━\n"
-        f"{color_tag} 신호: <b>{signal}</b>\n"
-        f"📌 종목: <b>{ticker}</b>\n"
-        f"💰 가격: <b>{price}</b>\n"
-        f"⏱ 타임프레임: {tf}\n"
-        f"🕐 시간: {time_}\n"
-        f"━━━━━━━━━━━━━━━"
-    )
+        return "🔔 트렌드 전환 발생"
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
@@ -59,22 +45,20 @@ def webhook():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route("/test", methods=["GET"])
-def test():
-    send_telegram("🧪 <b>테스트 메시지</b>\nRailway 서버가 정상 연결되었습니다! ✅")
-    return "테스트 메시지 전송 완료!", 200
-
 @app.route("/test/up", methods=["GET"])
 def test_up():
-    data = {"signal": "🚀 상승추세 시작", "ticker": "ETHUSD", "price": "3,200.00", "interval": "15", "time": datetime.now().strftime("%Y-%m-%d %H:%M")}
-    send_telegram(build_message(data))
+    send_telegram("📗 지금은 상승추세 입니다.")
     return "상승추세 신호 전송 완료!", 200
 
 @app.route("/test/down", methods=["GET"])
 def test_down():
-    data = {"signal": "🐻 하락추세 시작", "ticker": "ETHUSD", "price": "3,100.00", "interval": "15", "time": datetime.now().strftime("%Y-%m-%d %H:%M")}
-    send_telegram(build_message(data))
+    send_telegram("📕 지금은 하락추세 입니다.")
     return "하락추세 신호 전송 완료!", 200
+
+@app.route("/test", methods=["GET"])
+def test():
+    send_telegram("🧪 <b>테스트 메시지</b>\nRailway 서버가 정상 연결되었습니다! ✅")
+    return "테스트 메시지 전송 완료!", 200
 
 @app.route("/", methods=["GET"])
 def home():
