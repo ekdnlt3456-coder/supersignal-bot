@@ -20,13 +20,58 @@ def send_telegram(message: str):
         print(f"[❌ 전송 실패] {e}")
 
 def build_message(data: dict) -> str:
-    signal = data.get("signal", "")
-    if "상승" in signal:
+    signal  = data.get("signal", "")
+    ticker  = data.get("ticker", "")
+    price   = float(data.get("price", 0))
+    tf      = data.get("interval", "")
+    time_   = data.get("time", datetime.now().strftime("%Y-%m-%d %H:%M"))
+
+    if signal == "매수":
+        stop  = round(price * 0.99, 2)
+        tp1   = round(price * 1.01, 2)
+        tp2   = round(price * 1.02, 2)
+        tp3   = round(price * 1.03, 2)
+        return (
+            f"🚀 매수 신호 발생 🚀\n"
+            f"━━━━━━━━━━━━━━━\n"
+            f"📌 종목: <b>{ticker}</b>\n"
+            f"⏱ 타임프레임: {tf}\n"
+            f"💰 진입가: <b>{price}</b>\n"
+            f"🛑 손절가: <b>{stop}</b>\n"
+            f"🎯 익절 1: <b>{tp1}</b>\n"
+            f"🎯 익절 2: <b>{tp2}</b>\n"
+            f"🎯 익절 3: <b>{tp3}</b>\n"
+            f"🕐 시간: {time_}\n"
+            f"━━━━━━━━━━━━━━━\n"
+            f"⚠️ 본 신호는 관점 공유용입니다.\n"
+            f"투자의 책임은 본인에게 있습니다."
+        )
+    elif signal == "매도":
+        stop  = round(price * 1.01, 2)
+        tp1   = round(price * 0.99, 2)
+        tp2   = round(price * 0.98, 2)
+        tp3   = round(price * 0.97, 2)
+        return (
+            f"🐻 매도 신호 발생 🐻\n"
+            f"━━━━━━━━━━━━━━━\n"
+            f"📌 종목: <b>{ticker}</b>\n"
+            f"⏱ 타임프레임: {tf}\n"
+            f"💰 진입가: <b>{price}</b>\n"
+            f"🛑 손절가: <b>{stop}</b>\n"
+            f"🎯 익절 1: <b>{tp1}</b>\n"
+            f"🎯 익절 2: <b>{tp2}</b>\n"
+            f"🎯 익절 3: <b>{tp3}</b>\n"
+            f"🕐 시간: {time_}\n"
+            f"━━━━━━━━━━━━━━━\n"
+            f"⚠️ 본 신호는 관점 공유용입니다.\n"
+            f"투자의 책임은 본인에게 있습니다."
+        )
+    elif signal == "상승추세":
         return "📗 지금은 상승추세 입니다."
-    elif "하락" in signal:
+    elif signal == "하락추세":
         return "📕 지금은 하락추세 입니다."
     else:
-        return "🔔 트렌드 전환 발생"
+        return f"🔔 {signal}"
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
@@ -47,13 +92,15 @@ def webhook():
 
 @app.route("/test/up", methods=["GET"])
 def test_up():
-    send_telegram("📗 지금은 상승추세 입니다.")
-    return "상승추세 신호 전송 완료!", 200
+    data = {"signal": "매수", "ticker": "ETHUSD", "price": "3200.00", "interval": "15", "time": datetime.now().strftime("%Y-%m-%d %H:%M")}
+    send_telegram(build_message(data))
+    return "매수 신호 전송 완료!", 200
 
 @app.route("/test/down", methods=["GET"])
 def test_down():
-    send_telegram("📕 지금은 하락추세 입니다.")
-    return "하락추세 신호 전송 완료!", 200
+    data = {"signal": "매도", "ticker": "ETHUSD", "price": "3200.00", "interval": "15", "time": datetime.now().strftime("%Y-%m-%d %H:%M")}
+    send_telegram(build_message(data))
+    return "매도 신호 전송 완료!", 200
 
 @app.route("/test", methods=["GET"])
 def test():
