@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import requests
 import os
-import json
 from datetime import datetime
 
 app = Flask(__name__)
@@ -50,7 +49,7 @@ def build_message(signal: str, symbol: str, price: str, timeframe: str) -> str:
             "🔴 슈퍼트렌드 하향 돌파 확인\n"
             "⚠️ 숏 포지션 또는 매도 검토!"
         ),
-        "상승추세 시작": (
+        "UP": (
             "📈 <b>상승 추세 전환!</b>\n"
             "━━━━━━━━━━━━━━━━━\n"
             f"📌 종목 : <b>{symbol}</b>\n"
@@ -61,7 +60,7 @@ def build_message(signal: str, symbol: str, price: str, timeframe: str) -> str:
             "🟢 슈퍼트렌드 상승 전환 감지\n"
             "💡 매수 시점 주시 권장"
         ),
-        "하락추세 시작": (
+        "DOWN": (
             "📉 <b>하락 추세 전환!</b>\n"
             "━━━━━━━━━━━━━━━━━\n"
             f"📌 종목 : <b>{symbol}</b>\n"
