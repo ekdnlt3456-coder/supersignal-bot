@@ -23,13 +23,13 @@ def build_message(data: dict) -> str:
     signal = data.get("signal", "")
 
     if signal == "매수":
-        return "[신호알림]\n🟢 이더리움 매수[LONG]신호"
+        return "🟢 이더리움 매수[LONG]신호"
     elif signal == "매도":
-        return "[신호알림]\n🔴 이더리움 매도[SHORT]신호"
+        return "🔴 이더리움 매도[SHORT]신호"
     elif signal == "상승추세":
-        return "[추세알림]\n📈 지금 이더리움은 상승추세 입니다."
+        return "📈 지금 이더리움은 상승추세 입니다."
     elif signal == "하락추세":
-        return "[추세알림]\n📉 지금 이더리움은 하락추세 입니다."
+        return "📉 지금 이더리움은 하락추세 입니다."
     else:
         return f"🔔 {signal}"
 
