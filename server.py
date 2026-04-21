@@ -102,15 +102,14 @@ def test_down():
     send_telegram(build_message(data))
     return "매도 신호 전송 완료!", 200
 
-@app.route("/test", methods=["GET"])
-def test():
-    send_telegram("🧪 <b>테스트 메시지</b>\nRailway 서버가 정상 연결되었습니다! ✅")
-    return "테스트 메시지 전송 완료!", 200
+@app.route("/test/trend/up", methods=["GET"])
+def test_trend_up():
+    data = {"signal": "상승추세", "ticker": "ETHUSD", "price": "3200.00", "interval": "15", "time": datetime.now().strftime("%Y-%m-%d %H:%M")}
+    send_telegram(build_message(data))
+    return "상승추세 신호 전송 완료!", 200
 
-@app.route("/", methods=["GET"])
-def home():
-    return "✅ Supertrend 신호 서버 실행 중!", 200
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+@app.route("/test/trend/down", methods=["GET"])
+def test_trend_down():
+    data = {"signal": "하락추세", "ticker": "ETHUSD", "price": "3200.00", "interval": "15", "time": datetime.now().strftime("%Y-%m-%d %H:%M")}
+    send_telegram(build_message(data))
+    return "하락추세 신호 전송 완료!", 200
