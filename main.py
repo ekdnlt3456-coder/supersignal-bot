@@ -24,6 +24,7 @@ def send_telegram(message: str):
         "parse_mode": "HTML",
     }
     resp = requests.post(TELEGRAM_API, json=payload, timeout=10)
+    print(f"Telegram response: {resp.status_code} {resp.text}")
     return resp.ok
 
 
